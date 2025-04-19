@@ -25,14 +25,16 @@
                     </div>
 
                     <div class="rating-section mb-4">
-                        <div class="stars h3 text-warning mb-2">
-                            {% for _ in "12345" %}
-                                {% if forloop.counter <= review.rating %}
-                                    <span>★</span>
-                                {% else %}
-                                    <span class="text-muted">★</span>
-                                {% endif %}
-                            {% endfor %}
+                        <div class="d-flex align-items-center">
+                            <div class="stars h3 text-warning">
+                                {% for _ in "12345" %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <span>★</span>
+                                    {% else %}
+                                        <span class="text-muted">★</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                             <span class="ms-2 h5 text-muted">({{ review.rating }}/5)</span>
                         </div>
                         <p class="text-muted small">

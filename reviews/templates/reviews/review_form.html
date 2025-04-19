@@ -17,12 +17,15 @@
                         <label for="{{ form.rating.id_for_label }}" class="form-label">Rating</label>
                         <div class="rating-input">
                             <input type="hidden" name="{{ form.rating.name }}" id="{{ form.rating.id_for_label }}" value="{{ form.rating.value|default:'' }}" required min="1" max="5">
-                            <div class="stars">
-                                {% for i in "54321" %}
-                                    <span class="star{% if form.rating.value and i|add:'0' >= form.rating.value %} active{% endif %}" 
-                                          data-value="{{ i }}"
-                                          data-rating="{{ i }}">★</span>
-                                {% endfor %}
+                            <div class="d-flex align-items-center">
+                                <div class="stars">
+                                    {% for i in "54321" %}
+                                        <span class="star{% if form.rating.value and i|add:'0' >= form.rating.value %} active{% endif %}" 
+                                              data-value="{{ i }}"
+                                              data-rating="{{ i }}">★</span>
+                                    {% endfor %}
+                                </div>
+                                <span class="ms-2 rating-value text-muted"></span>
                             </div>
                             <div class="invalid-feedback">Please select a rating between 1 and 5 stars</div>
                         </div>
@@ -93,6 +96,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update stars visual state
     function updateStars(value) {
         highlightStars(value);
+        // Update rating value display
+        const ratingValue = document.querySelector('.rating-value');
+        if (value) {
+            ratingValue.textContent = `(${value}/5)`;
+        } else {
+            ratingValue.textContent = '';
+        }
     }
 
     // Highlight stars up to specified rating
