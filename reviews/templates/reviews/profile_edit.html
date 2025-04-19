@@ -1,0 +1,91 @@
+{% extends 'reviews/base.html' %}
+{% load static form_filters %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8">
+        <div class="card form-card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Edit Profile</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Profile Picture</label>
+                        <div class="avatar-upload">
+                            <div class="current-avatar mb-3">
+                                {% if profile.avatar %}
+                                    <img src="{{ profile.avatar.url }}" alt="Current avatar" class="rounded-circle" width="100" height="100">
+                                {% else %}
+                                    <img src="{% static 'reviews/img/default-avatar.png' %}" alt="Default avatar" class="rounded-circle" width="100" height="100">
+                                {% endif %}
+                            </div>
+                            {{ form.avatar|addclass:"form-control" }}
+                            {% if form.avatar.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.avatar.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.bio.id_for_label }}" class="form-label">Bio</label>
+                        {{ form.bio|addclass:"form-control" }}
+                        {% if form.bio.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.bio.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Favorite Genres</label>
+                        <div class="genre-select d-flex flex-wrap gap-2">
+                            {{ form.favorite_genres|addclass:"d-none" }}
+                            {% for genre in form.favorite_genres.field.queryset %}
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" 
+                                           name="favorite_genres" 
+                                           value="{{ genre.id }}"
+                                           id="genre_{{ genre.id }}"
+                                           class="form-check-input"
+                                           {% if genre in form.favorite_genres.value %}checked{% endif %}>
+                                    <label class="form-check-label badge bg-secondary" 
+                                           for="genre_{{ genre.id }}">
+                                        {{ genre.name }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.favorite_genres.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.favorite_genres.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.reading_goal.id_for_label }}" class="form-label">Reading Goal (books per year)</label>
+                        {{ form.reading_goal|addclass:"form-control" }}
+                        {% if form.reading_goal.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.reading_goal.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'user-profile' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'reviews/css/forms.css' %}">
+{% endblock %}

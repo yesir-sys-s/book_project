@@ -1,0 +1,40 @@
+from django.urls import path
+from django.contrib.auth.views import LogoutView
+from .views import (
+    HomeView,
+    BookListView,
+    BookDetailView,
+    BookCreateView,
+    BookUpdateView,
+    BookDeleteView,
+    ReviewCreateView,
+    ReviewUpdateView,
+    ReviewDeleteView,
+    UserProfileView,
+    ReadingListCreateView,
+    ReadingListDetailView,
+    ReviewVoteView,
+    UserFollowView,
+    UserProfileEditView,
+    ReviewDetailView,
+)
+
+urlpatterns = [
+    path('', HomeView.as_view(), name='home'),
+    path('books/', BookListView.as_view(), name='book-list'),
+    path('book/<int:pk>/', BookDetailView.as_view(), name='book-detail'),
+    path('book/new/', BookCreateView.as_view(), name='book-create'),
+    path('book/<int:pk>/edit/', BookUpdateView.as_view(), name='book-update'),
+    path('book/<int:pk>/delete/', BookDeleteView.as_view(), name='book-delete'),
+    path('book/<int:book_id>/review/new/', ReviewCreateView.as_view(), name='review-create'),
+    path('review/<int:pk>/update/', ReviewUpdateView.as_view(), name='review-update'),
+    path('review/<int:pk>/delete/', ReviewDeleteView.as_view(), name='review-delete'),
+    path('accounts/logout/', LogoutView.as_view(next_page='home'), name='logout'),
+    path('profile/', UserProfileView.as_view(), name='user-profile'),
+    path('profile/edit/', UserProfileEditView.as_view(), name='edit-profile'),
+    path('reading-list/new/', ReadingListCreateView.as_view(), name='reading-list-create'),
+    path('reading-list/<int:pk>/', ReadingListDetailView.as_view(), name='reading-list-detail'),
+    path('review/<int:pk>/vote/', ReviewVoteView.as_view(), name='review-vote'),
+    path('user/<int:user_id>/follow/', UserFollowView.as_view(), name='user-follow'),
+    path('review/<int:pk>/', ReviewDetailView.as_view(), name='review-detail'),
+]

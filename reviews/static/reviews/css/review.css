@@ -1,0 +1,27 @@
+.rating-badge {
+    font-size: 1.1rem;
+    white-space: nowrap;
+}
+
+.stars h3 {
+    margin-bottom: 0;
+}
+
+.review-content {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.review-meta {
+    color: var(--bs-secondary);
+    font-size: 0.9rem;
+}
+
+.review-card {
+    transition: transform 0.2s ease;
+    border-radius: 0.5rem;
+}
+
+.review-card:hover {
+    transform: translateY(-2px);
+}

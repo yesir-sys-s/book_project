@@ -1,0 +1,194 @@
+{% extends 'reviews/base.html' %}
+{% load static form_filters %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'reviews/css/forms.css' %}">
+<link rel="stylesheet" href="{% static 'reviews/css/book_form.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-10 col-lg-8">
+        <div class="card form-card shadow-lg">
+            <div class="card-body p-4 p-md-5">
+                <h2 class="card-title mb-4 display-5">
+                    {% if form.instance.pk %}Edit Book{% else %}Add New Book{% endif %}
+                </h2>
+                
+                <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row g-4">
+                        <!-- Cover Image Section -->
+                        <div class="col-md-4">
+                            <div class="form-section">
+                                <h3 class="form-section-title h5 mb-3">Cover Image</h3>
+                                <div class="cover-upload-area rounded-3 border {% if form.cover_image.errors %}border-danger{% endif %}">
+                                    <div class="cover-preview-wrapper">
+                                        {% if form.instance.cover_image %}
+                                            <img src="{{ form.instance.cover_image.url }}" 
+                                                 alt="Current cover" 
+                                                 class="cover-preview img-fluid rounded">
+                                        {% else %}
+                                            <div class="cover-placeholder text-muted">
+                                                <i class="fas fa-book-open fa-3x"></i>
+                                                <span class="d-block mt-2">No cover image</span>
+                                            </div>
+                                        {% endif %}
+                                        <div id="coverPreview" class="cover-preview"></div>
+                                    </div>
+                                    <div class="cover-upload-btn mt-3">
+                                        <button type="button" class="btn btn-outline-primary w-100">
+                                            <i class="fas fa-upload me-2"></i>
+                                            {% if form.instance.cover_image %}Change Cover{% else %}Upload Cover{% endif %}
+                                        </button>
+                                        {{ form.cover_image|addclass:"d-none" }}
+                                        {% if form.cover_image.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ form.cover_image.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Book Details Section -->
+                        <div class="col-md-8">
+                            <!-- Basic Information -->
+                            <div class="form-section mb-4">
+                                <h3 class="form-section-title h5 mb-3">Basic Information</h3>
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="{{ form.title.id_for_label }}" class="form-label">
+                                            {{ form.title.label }}
+                                        </label>
+                                        {{ form.title|addclass:"form-control" }}
+                                        {% if form.title.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.title.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="{{ form.author.id_for_label }}" class="form-label">
+                                            {{ form.author.label }}
+                                        </label>
+                                        {{ form.author|addclass:"form-control" }}
+                                        {% if form.author.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.author.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="{{ form.published_date.id_for_label }}" class="form-label">
+                                            {{ form.published_date.label }}
+                                        </label>
+                                        {{ form.published_date|addclass:"form-control datepicker" }}
+                                        {% if form.published_date.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.published_date.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Genres Selection -->
+                            <div class="form-section mb-4">
+                                <h3 class="form-section-title h5 mb-3">Genres</h3>
+                                <div class="genre-select d-flex flex-wrap gap-2">
+                                    {% for genre in all_genres %}
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" 
+                                                   type="checkbox" 
+                                                   name="genres" 
+                                                   value="{{ genre.id }}" 
+                                                   id="genre_{{ genre.id }}"
+                                                   {% if genre in form.instance.genres.all %}checked{% endif %}>
+                                            <label class="form-check-label badge bg-secondary" 
+                                                   for="genre_{{ genre.id }}">
+                                                {{ genre.name }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% if form.genres.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.genres.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Additional Details -->
+                            <div class="form-section">
+                                <h3 class="form-section-title h5 mb-3">Additional Details</h3>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="{{ form.language.id_for_label }}" class="form-label">
+                                            {{ form.language.label }}
+                                        </label>
+                                        {{ form.language|addclass:"form-select" }}
+                                        {% if form.language.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.language.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="{{ form.pages.id_for_label }}" class="form-label">
+                                            {{ form.pages.label }}
+                                        </label>
+                                        {{ form.pages|addclass:"form-control" }}
+                                        {% if form.pages.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.pages.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <label for="{{ form.description.id_for_label }}" class="form-label">
+                                            {{ form.description.label }}
+                                        </label>
+                                        {{ form.description|addclass:"form-control" }}
+                                        {% if form.description.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.description.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions mt-5 d-flex gap-2 justify-content-end">
+                        <a href="{% url 'book-list' %}" class="btn btn-lg btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-lg btn-primary" id="submitBtn">
+                            <span class="submit-text">
+                                <i class="fas fa-save me-2"></i>
+                                {% if form.instance.pk %}Save Changes{% else %}Create Book{% endif %}
+                            </span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="{% static 'reviews/js/book_form.js' %}"></script>
+{% endblock %}

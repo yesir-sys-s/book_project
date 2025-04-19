@@ -1,0 +1,121 @@
+{% extends 'reviews/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'reviews/css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8">
+        <div class="card form-card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">{% if form.instance.pk %}Edit Review{% else %}Write Review{% endif %}</h2>
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="{{ form.rating.id_for_label }}" class="form-label">Rating</label>
+                        <div class="rating-input">
+                            <input type="hidden" name="{{ form.rating.name }}" id="{{ form.rating.id_for_label }}" value="{{ form.rating.value|default:'' }}" required min="1" max="5">
+                            <div class="stars">
+                                {% for i in "54321" %}
+                                    <span class="star{% if form.rating.value and i|add:'0' >= form.rating.value %} active{% endif %}" 
+                                          data-value="{{ i }}"
+                                          data-rating="{{ i }}">★</span>
+                                {% endfor %}
+                            </div>
+                            <div class="invalid-feedback">Please select a rating between 1 and 5 stars</div>
+                        </div>
+                        {{ form.rating.errors }}
+                    </div>
+                    <div class="mb-4">
+                        <label for="{{ form.text.id_for_label }}" class="form-label">Your Review</label>
+                        {{ form.text }}
+                        {{ form.text.errors }}
+                        {% if form.text.help_text %}
+                            <div class="help-text">{{ form.text.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{% url 'book-detail' book.pk %}" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Update{% else %}Post{% endif %} Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ratingInput = document.getElementById('{{ form.rating.id_for_label }}');
+    const stars = document.querySelectorAll('.star');
+    const starsContainer = document.querySelector('.stars');
+    const form = document.querySelector('form');
+
+    // Set initial rating if editing
+    if (ratingInput.value) {
+        updateStars(parseInt(ratingInput.value));
+    }
+
+    // Handle star hover
+    stars.forEach(star => {
+        star.addEventListener('mouseenter', function() {
+            const rating = parseInt(this.dataset.rating);
+            highlightStars(rating);
+        });
+    });
+
+    // Handle mouse leave on stars container
+    starsContainer.addEventListener('mouseleave', function() {
+        const currentRating = parseInt(ratingInput.value) || 0;
+        highlightStars(currentRating);
+    });
+
+    // Handle star clicks with animation
+    starsContainer.addEventListener('click', function(e) {
+        if (e.target.classList.contains('star')) {
+            const value = parseInt(e.target.dataset.value);
+            ratingInput.value = value;
+            
+            // Add click animation
+            e.target.classList.add('star-clicked');
+            setTimeout(() => {
+                e.target.classList.remove('star-clicked');
+            }, 200);
+            
+            updateStars(value);
+        }
+    });
+
+    // Update stars visual state
+    function updateStars(value) {
+        highlightStars(value);
+    }
+
+    // Highlight stars up to specified rating
+    function highlightStars(rating) {
+        stars.forEach(star => {
+            const starValue = parseInt(star.dataset.value);
+            star.classList.toggle('active', starValue <= rating);
+        });
+    }
+
+    // Form validation
+    form.addEventListener('submit', function(e) {
+        if (!ratingInput.value || ratingInput.value < 1 || ratingInput.value > 5) {
+            e.preventDefault();
+            ratingInput.parentElement.classList.add('was-validated');
+        }
+    });
+
+    // Initialize text field with form data
+    const textField = document.getElementById('{{ form.text.id_for_label }}');
+    if (textField) {
+        textField.classList.add('form-control');
+    }
+});
+</script>
+{% endblock %}

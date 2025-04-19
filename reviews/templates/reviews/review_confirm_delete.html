@@ -1,0 +1,35 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Delete Review</h2>
+                <p>Are you sure you want to delete your review for "{{ object.book.title }}"?</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="rating mb-2">
+                                {% for _ in "12345" %}
+                                    {% if forloop.counter <= object.rating %}
+                                        <span class="text-warning">★</span>
+                                    {% else %}
+                                        <span class="text-secondary">★</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p class="card-text">{{ object.text }}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'book-detail' object.book.pk %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-danger">Delete Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

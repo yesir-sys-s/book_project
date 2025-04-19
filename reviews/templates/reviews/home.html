@@ -1,0 +1,65 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">Welcome to Book Reviews</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">
+            Discover new books, share your thoughts, and connect with other readers.
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="{% url 'book-list' %}" class="btn btn-primary btn-lg px-4 gap-3">Browse Books</a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'signup' %}" class="btn btn-outline-secondary btn-lg px-4">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <h2>Latest Reviews</h2>
+        {% for review in latest_reviews %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">{{ review.book.title }}</h6>
+                    <p class="card-text">{{ review.text|truncatewords:30 }}</p>
+                    <a href="{% url 'book-detail' review.book.pk %}" class="card-link">Read more</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>No reviews yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <h2>Top Rated Books</h2>
+        {% for book in top_rated_books %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h6 class="card-title">{{ book.title }}</h6>
+                    <p class="card-text">Rating: {{ book.get_average_rating|floatformat:1 }}/5.0</p>
+                    <a href="{% url 'book-detail' book.pk %}" class="card-link">View details</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>No books rated yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <h2>Most Reviewed</h2>
+        {% for book in most_reviewed %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h6 class="card-title">{{ book.title }}</h6>
+                    <p class="card-text">{{ book.review_count }} reviews</p>
+                    <a href="{% url 'book-detail' book.pk %}" class="card-link">View details</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>No reviews yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

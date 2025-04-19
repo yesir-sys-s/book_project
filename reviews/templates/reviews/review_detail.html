@@ -1,0 +1,62 @@
+{% extends 'reviews/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'reviews/css/review.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        {% if review.book.cover_image %}
+                            <img src="{{ review.book.cover_image.url }}" 
+                                 alt="{{ review.book.title }} cover"
+                                 class="rounded me-4"
+                                 style="width: 100px; height: 150px; object-fit: cover;">
+                        {% endif %}
+                        <div>
+                            <h1 class="h3 mb-2">Review of {{ review.book.title }}</h1>
+                            <p class="text-muted mb-0">by {{ review.user.username }}</p>
+                        </div>
+                    </div>
+
+                    <div class="rating-section mb-4">
+                        <div class="stars h3 text-warning mb-2">
+                            {% for _ in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    <span>★</span>
+                                {% else %}
+                                    <span class="text-muted">★</span>
+                                {% endif %}
+                            {% endfor %}
+                            <span class="ms-2 h5 text-muted">({{ review.rating }}/5)</span>
+                        </div>
+                        <p class="text-muted small">
+                            Posted on {{ review.created_at|date:"F j, Y" }}
+                        </p>
+                    </div>
+
+                    <div class="review-content">
+                        {{ review.text|linebreaks }}
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top">
+                        <a href="{{ review.book.get_absolute_url }}" class="btn btn-primary">
+                            View Book
+                        </a>
+                        {% if user == review.user %}
+                            <a href="{% url 'review-update' review.pk %}" class="btn btn-outline-secondary">
+                                Edit Review
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

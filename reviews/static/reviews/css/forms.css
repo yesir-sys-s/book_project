@@ -1,0 +1,146 @@
+.form-card {
+    box-shadow: var(--card-shadow);
+    border: none;
+    border-radius: 15px;
+    background: white;
+}
+
+[data-theme="dark"] .form-card {
+    background: #2d3436;
+}
+
+.form-card .card-body {
+    padding: 2.5rem;
+}
+
+.form-control, .form-select {
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    transition: all 0.3s;
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: #2d3436;
+    border-color: #4a4a4a;
+    color: white;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.15);
+    border-color: #3498db;
+    background-color: white;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background-color: #2d3436;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-1px);
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
+}
+
+.help-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+[data-theme="dark"] .help-text {
+    color: #a0a0a0;
+}
+
+.rating-input {
+    font-size: 2rem;
+    color: #f1c40f;
+}
+
+textarea.form-control {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.stars {
+    display: flex;
+    gap: 0.25rem;
+    font-size: 2rem;
+    position: relative;
+    flex-direction: row-reverse;
+}
+
+.star {
+    color: #dee2e6;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    z-index: 1;
+    user-select: none;
+    padding: 0 0.1em;
+    transform-origin: center;
+}
+
+.star:hover,
+.star.active {
+    color: #ffc107;
+}
+
+.star.active {
+    text-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+}
+
+.star-clicked {
+    animation: star-pop 0.2s ease-in-out;
+}
+
+@keyframes star-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.stars:hover .star {
+    color: #dee2e6;
+}
+
+.stars:hover .star:hover,
+.stars:hover .star ~ .star:hover {
+    color: #dee2e6;
+}
+
+.stars:hover .star:hover,
+.stars:hover .star:hover ~ .star {
+    transform: scale(1.1);
+}
+
+.stars .star:hover ~ .star,
+.stars .star:hover {
+    color: #ffc107;
+}
+
+.rating-input .invalid-feedback {
+    display: none;
+}
+
+.rating-input.was-validated .invalid-feedback {
+    display: block;
+}

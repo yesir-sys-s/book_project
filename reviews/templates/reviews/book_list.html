@@ -1,0 +1,51 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Book Catalog</h1>
+    {% if user.is_staff %}
+        <a href="{% url 'book-create' %}" class="btn btn-success">Create Book</a>
+    {% endif %}
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <form class="d-flex" method="get">
+            <input class="form-control me-2" type="search" placeholder="Search books..." name="search" value="{{ request.GET.search }}">
+            <select class="form-select me-2" name="genre">
+                <option value="">All Genres</option>
+                {% for genre in genres %}
+                <option value="{{ genre.name }}" {% if request.GET.genre == genre.name %}selected{% endif %}>{{ genre.name }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for book in books %}
+    <div class="col">
+        <div class="card h-100">
+            {% if book.cover_image %}
+            <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <p class="card-text">{{ book.author }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge bg-primary rounded-pill">
+                        Average Rating: {{ book.get_average_rating|floatformat:1 }}
+                    </span>
+                    <a href="{% url 'book-detail' book.pk %}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">No books available</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

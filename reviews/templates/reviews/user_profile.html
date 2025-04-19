@@ -1,0 +1,131 @@
+{% extends 'reviews/base.html' %}
+{% load static template_filters %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- Profile Summary Column -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="avatar-wrapper mb-4">
+                        {% if profile.avatar %}
+                            <img src="{{ profile.avatar.url }}" 
+                                 alt="{{ user.username }}'s avatar" 
+                                 class="avatar-img rounded-circle"
+                                 width="120"
+                                 height="120">
+                        {% else %}
+                            <img src="{% static 'reviews/img/default-avatar.png' %}" 
+                                 alt="{{ user.username }}'s avatar" 
+                                 class="avatar-img rounded-circle"
+                                 width="120"
+                                 height="120">
+                        {% endif %}
+                    </div>
+                    <h1 class="h2 mb-3">{{ user.username }}</h1>
+                    
+                    <div class="bio-section mb-4">
+                        <h2 class="h5 mb-3">About Me</h2>
+                        <div class="bio-content text-muted px-3">
+                            {{ profile.bio|default:"<em class='text-muted'>No bio provided</em>" }}
+                        </div>
+                    </div>
+                    
+                    <div class="genres-section">
+                        <h2 class="h5 mb-3">Favorite Genres</h2>
+                        <div class="d-flex flex-wrap gap-2 justify-content-center">
+                            {% for genre in profile.favorite_genres.all %}
+                                <a href="#" class="badge genre-badge text-decoration-none">
+                                    {{ genre.name }}
+                                </a>
+                            {% empty %}
+                                <p class="text-muted small mb-0">No favorite genres selected</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% if user == request.user %}
+                <div class="card-footer bg-transparent border-top-0">
+                    <a href="{% url 'edit-profile' %}" 
+                       class="btn btn-outline-primary w-100"
+                       aria-label="Edit profile">
+                        <i class="fas fa-edit me-2"></i>Edit Profile
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Reviews Column -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h2 class="h4 mb-4">My Reviews</h2>
+                    
+                    {% if user.review_set.all %}
+                        <div class="review-list">
+                            {% for review in user.review_set.all %}
+                                <article class="review-card card mb-3 border-0 bg-light">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-start">
+                                            {% if review.book.cover_image %}
+                                            <img src="{{ review.book.cover_image.url }}" 
+                                                 alt="{{ review.book.title }} cover" 
+                                                 class="book-cover rounded me-3"
+                                                 width="80"
+                                                 height="120">
+                                            {% endif %}
+                                            <div class="flex-grow-1">
+                                                <header class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h3 class="h6 mb-0">
+                                                        <a href="{{ review.book.get_absolute_url }}" 
+                                                           class="text-decoration-none">
+                                                            {{ review.book.title }}
+                                                        </a>
+                                                    </h3>
+                                                    <div class="rating-badge" 
+                                                         aria-label="Rating: {{ review.rating }} out of 5">
+                                                        {% with "★"|repeat:review.rating as stars %}
+                                                            <span class="text-warning">{{ stars }}</span>
+                                                        {% endwith %}
+                                                        <span class="text-muted">/5</span>
+                                                    </div>
+                                                </header>
+                                                <div class="text-muted small mb-2">
+                                                    Reviewed on {{ review.created_at|date:"F j, Y" }}
+                                                </div>
+                                                <div class="review-text">
+                                                    {{ review.text|truncatewords:30 }}
+                                                </div>
+                                                <div class="mt-2">
+                                                    <a href="{{ review.book.get_absolute_url }}" 
+                                                       class="btn btn-sm btn-outline-secondary">
+                                                        View Book
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state text-center py-5">
+                            <i class="fas fa-comment-slash text-muted fa-3x mb-3"></i>
+                            <p class="text-muted">No reviews written yet</p>
+                            <a href="{% url 'book-list' %}" class="btn btn-primary">
+                                Write Your First Review
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'reviews/css/profile.css' %}">
+{% endblock %}

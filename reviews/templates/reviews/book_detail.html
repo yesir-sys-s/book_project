@@ -1,0 +1,89 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="card mb-4">
+    <div class="row g-0">
+        <div class="col-md-4">
+            {% if book.cover_image %}
+            <img src="{{ book.cover_image.url }}" class="img-fluid rounded-start" alt="{{ book.title }}">
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h1 class="card-title">{{ book.title }}</h1>
+                <p class="card-text">{{ book.author }}</p>
+                <p class="card-text">{{ book.description }}</p>
+                <p class="card-text">
+                    <small class="text-muted">
+                        ISBN: {{ book.isbn }} | Published: {{ book.published_date }}
+                    </small>
+                </p>
+                <div class="share-buttons mt-3">
+                    <a href="https://twitter.com/intent/tweet?text=Check out {{ book.title|urlencode }}&url={{ request.build_absolute_uri }}" 
+                       class="btn btn-primary" target="_blank">
+                        Share on Twitter
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" 
+                       class="btn btn-primary" target="_blank">
+                        Share on Facebook
+                    </a>
+                </div>
+                {% if user.is_staff %}
+                <div class="mt-3">
+                    <a href="{% url 'book-update' book.pk %}" class="btn btn-warning">Edit Book</a>
+                    <a href="{% url 'book-delete' book.pk %}" class="btn btn-danger">Delete Book</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Reviews</h3>
+        {% if not user_review %}
+            <a href="{% url 'review-create' book.pk %}" class="btn btn-success">Write a Review</a>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {% for review in book.review_set.all %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5>{{ review.user.username }}</h5>
+                    <div class="rating">
+                        {% for _ in "12345" %}
+                            {% if forloop.counter <= review.rating %}
+                                <span class="text-warning">★</span>
+                            {% else %}
+                                <span class="text-secondary">★</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <p>{{ review.text }}</p>
+                {% if review.user == user %}
+                    <div class="btn-group">
+                        <a href="{% url 'review-update' review.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <a href="{% url 'review-delete' review.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </div>
+                {% endif %}
+                <small class="text-muted">{{ review.created_at }}</small>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">No reviews yet. Be the first to review!</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

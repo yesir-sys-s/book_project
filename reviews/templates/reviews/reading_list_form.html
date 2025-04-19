@@ -1,0 +1,72 @@
+{% extends 'reviews/base.html' %}
+{% load static form_filters %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'reviews/css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8">
+        <div class="card form-card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">{% if form.instance.pk %}Edit Reading List{% else %}Create Reading List{% endif %}</h2>
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">List Name</label>
+                        {{ form.name|addclass:"form-control" }}
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.name.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check">
+                            {{ form.is_public|addclass:"form-check-input" }}
+                            <label class="form-check-label" for="{{ form.is_public.id_for_label }}">
+                                Make this list public
+                            </label>
+                            {% if form.is_public.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.is_public.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <small class="text-muted">
+                            Public lists can be viewed by other users
+                        </small>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'user-profile' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">
+                            {% if form.instance.pk %}Save Changes{% else %}Create List{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+});
+</script>
+{% endblock %}

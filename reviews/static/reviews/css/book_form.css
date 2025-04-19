@@ -1,0 +1,186 @@
+.form-section {
+    border-bottom: 1px solid #eee;
+    padding: 1.5rem 0;
+    margin-bottom: 1.5rem;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.form-section-title {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.cover-preview-section {
+    text-align: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.cover-preview {
+    max-width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.cover-upload-btn {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.cover-upload-btn input[type=file] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.cover-upload-area {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    text-align: center;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cover-preview-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.cover-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: #6c757d;
+}
+
+.genre-select {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.genre-option {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.genre-option:hover {
+    border-color: #3498db;
+    background-color: #e3f2fd;
+}
+
+.genre-option.selected {
+    background-color: #3498db;
+    color: white;
+    border-color: #2980b9;
+}
+
+.genre-option input[type="checkbox"] {
+    display: none;
+}
+
+.form-check-label.badge {
+    font-size: 0.9rem;
+    font-weight: normal;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #e9ecef;
+    color: #495057;
+    border: 1px solid #ced4da;
+    padding: 0.5rem 1rem;
+}
+
+.form-check-input:checked + .form-check-label.badge {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+.form-check-label.badge:hover {
+    background-color: #dee2e6;
+}
+
+.form-check-input:checked + .form-check-label.badge:hover {
+    background-color: #0b5ed7;
+}
+
+.publish-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-top: 2rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+/* Form submission styles */
+.submit-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.spinner-border {
+    width: 1.2rem;
+    height: 1.2rem;
+    border-width: 2px;
+}
+
+/* Flatpickr customization */
+.flatpickr-input {
+    background-color: #fff !important;
+}
+
+[data-theme="dark"] .flatpickr-input {
+    background-color: #2d3436 !important;
+    color: #fff;
+}
+
+.flatpickr-calendar {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .genre-select {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+}
