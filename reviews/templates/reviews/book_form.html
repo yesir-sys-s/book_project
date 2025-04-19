@@ -39,11 +39,16 @@
                                         <div id="coverPreview" class="cover-preview"></div>
                                     </div>
                                     <div class="cover-upload-btn mt-3">
-                                        <button type="button" class="btn btn-outline-primary w-100">
+                                        <label for="cover-image-input" class="btn btn-outline-primary w-100">
                                             <i class="fas fa-upload me-2"></i>
                                             {% if form.instance.cover_image %}Change Cover{% else %}Upload Cover{% endif %}
-                                        </button>
-                                        {{ form.cover_image|addclass:"d-none" }}
+                                        </label>
+                                        <input type="file" 
+                                               id="cover-image-input"
+                                               name="{{ form.cover_image.name }}"
+                                               accept="image/*"
+                                               class="d-none"
+                                               {% if form.cover_image.value %}value="{{ form.cover_image.value }}"{% endif %}>
                                         {% if form.cover_image.errors %}
                                             <div class="invalid-feedback d-block">
                                                 {{ form.cover_image.errors }}
